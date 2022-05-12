@@ -29,6 +29,14 @@ function CountryLookup {
         }
     }
 
-    return $objs | Where-Object EnglishName -eq $Country | Select-Object -Unique EnglishName, TwoLetterISORegionName
+    return $objs | Where-Object EnglishName -eq $Country | Select-Object -Unique TwoLetterISORegionName
 
 }
+
+$Country = Read-Host "Country"
+
+if ($Country.Length -gt 2) {
+    $Country = (CountryLookup -Country $Country).TwoLetterISORegionName
+}
+
+Write-Host $Country

@@ -6,10 +6,7 @@ function CountryLookup {
 
     # $Country = "United Kingdom"
     
-    $AllCultures = [System.Globalization.CultureInfo]::
-    GetCultures(
-        [System.Globalization.CultureTypes]::
-        SpecificCultures) # !AllCultures
+    $AllCultures = [System.Globalization.CultureInfo]::GetCultures([System.Globalization.CultureTypes]::SpecificCultures) # !AllCultures
 
     $objs = @()
     $AllCultures | ForEach-Object {
@@ -29,6 +26,6 @@ function CountryLookup {
         }
     }
 
-    return $objs | Where-Object EnglishName -eq $Country | Select-Object -Unique EnglishName, TwoLetterISORegionName
+    return $objs | Where-Object EnglishName -eq $Country | Select-Object -Unique TwoLetterISORegionName
 
 }

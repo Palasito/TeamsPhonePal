@@ -1,10 +1,10 @@
 function Add-VRP {
     param (
-        $MainCountryCode
+        $CountryCode
     )
 
-    $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to " + "$($MainCountryCode)" + "Landlines Only" -OnlinePstnUsages "$($MainCountryCode)" + "LandlinesOnly"
-    $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to " + "$($MainCountryCode)" + "Local Only" -OnlinePstnUsages "$($MainCountryCode)" + "LocalOnly", "$($MainCountryCode)" + "LandlinesOnly"
-    $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to " + "$($MainCountryCode)" + "Local Only & Paid" -OnlinePstnUsages "$($MainCountryCode)" + "LocalOnly", "$($MainCountryCode)" + "LandlinesOnly", "$($MainCountryCode)" + "LocalOnly&Paid"
-    $null = New-CsOnlineVoiceRoutingPolicy -Identity "Unrestricted Local and International" -OnlinePstnUsages "$($MainCountryCode)" + "LocalOnly", "$($MainCountryCode)" + "LandlinesOnly", "$($MainCountryCode)" + "LocalOnly&Paid", "GeneralInternational"
+    $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Landlines Only" -OnlinePstnUsages "$($CountryCode)LandlinesOnly"
+    $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Local Only" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly"
+    $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Local Only & Paid" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly", "$($CountryCode)LocalPaid"
+    $null = New-CsOnlineVoiceRoutingPolicy -Identity "Unrestricted Local and International" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly", "$($CountryCode)LocalPaid", "GeneralInternational"
 }

@@ -1,12 +1,12 @@
 function Add-PSTNUsage {
     param (
         [Mandatory]
-        $MainCountryCode
+        $CountryCode
     )
 
-    $null = Set-CsOnlinePstnUsage -Identity Global -Usage @{add="$($MainCountryCode)" + "LandlinesOnly"}
-    $null = Set-CsOnlinePstnUsage -Identity Global -Usage @{add="$($MainCountryCode)" + "LocalOnly"}
-    $null = Set-CsOnlinePstnUsage -Identity Global -Usage @{add="$($MainCountryCode)" + "LocalOnly&Paid"}
+    $null = Set-CsOnlinePstnUsage -Identity Global -Usage @{add="$($CountryCode)LandlinesOnly"}
+    $null = Set-CsOnlinePstnUsage -Identity Global -Usage @{add="$($CountryCode)MobilesOnly"}
+    $null = Set-CsOnlinePstnUsage -Identity Global -Usage @{add="$($CountryCode)LocalPaid"}
     $null = Set-CsOnlinePstnUsage -Identity Global -Usage @{add="GeneralInternational"}
     
 }
