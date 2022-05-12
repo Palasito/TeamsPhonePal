@@ -13,23 +13,38 @@ function TeamsDeployment {
     # End
 
     # SBC Conf
-    $null = SBCConf -FQDN $SBCFQDN -Port $Port
+    $checkSBC = Get-CsOnlinePSTNGateway -Identity $SBCFQDN
+    if ($null -eq $checkSBC) {
+        try {
+            $null = SBCConf -FQDN $SBCFQDN -Port $Port
+        }
+        catch {
+            Write-Host "SBC creation failed. Please check whether the FQDN provided is valid"
+            break
+        }
+    }
     # End
 
     # Telephony Conf
     $null = TelDep =Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob
+    
     $confirmation = Read-Host "Do you want to create a set of rules for another Country? [y/n]"
     if ($confirmation -eq 'y*') {
         do {
             $NC = Read-Host "Specify new country of Usage using ISO Code or Country Name"
             $NS = Read-Host "Specify the SBC FQDN"
-            $NP = Read-Host "Specify signalling port of SBC"
             $L = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
             $M = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
 
             try {
 
-                $null = SBCConf -FQDN $NS -Port $NP
+                if ($NS = $SBCFQDN) {
+
+                    $NP = Read-Host "Specify signalling port of SBC"
+                    $null = SBCConf -FQDN $NS -Port $NP
+
+                }
+
                 $null = TelDep =Country $NC -SBCFQDN $NS -Land $L -Mob $M
 
             }
@@ -42,11 +57,11 @@ function TeamsDeployment {
     }
     # End
 
-    $confirmation = Read-Host "Text Here! [y/n]"
-    if ($confirmation -eq 'n') {
-        # Do Nothing !
-    }
-    if ($confirmation -eq 'y') {
+    # $confirmation = Read-Host "Text Here! [y/n]"
+    # if ($confirmation -eq 'n') {
+    #     # Do Nothing !
+    # }
+    # if ($confirmation -eq 'y') {
 
-    }
+    # }
 }
