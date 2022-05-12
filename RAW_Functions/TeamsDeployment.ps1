@@ -12,6 +12,18 @@ function TeamsDeployment {
     $Mob = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
     # End
 
+    # Country Validation
+    switch (CountryValidation -Country $MC) {
+        $null {
+            Write-Host "Could not find country by Lookup. Consider looking up the ISO code and using it in the module"
+            exit
+        }
+        default {
+            # Do nothing !
+        }
+    }
+    # End
+
     # SBC Conf
     $checkSBC = Get-CsOnlinePSTNGateway -Identity $SBCFQDN
     if ($null -eq $checkSBC) {
@@ -20,7 +32,7 @@ function TeamsDeployment {
         }
         catch {
             Write-Host "SBC creation failed. Please check whether the FQDN provided is valid"
-            break
+            exit
         }
     }
     # End
@@ -50,7 +62,7 @@ function TeamsDeployment {
             }
             catch {
                 Write-host "SBC creation failed. Please check whether the FQDN provided is valid"
-                break
+                exit
             }
         }
         until ($confirmation -eq "n*")
