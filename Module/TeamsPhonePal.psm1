@@ -1,6 +1,6 @@
 $Functions = @(Get-ChildItem -Path $PSScriptRoot\Functions\*.ps1 -ErrorAction SilentlyContinue)
 
-foreach ($function in $Functions) {
+foreach ($function in $Functions) { 
     try {
         . $function.Fullname -ErrorAction Stop
     }
