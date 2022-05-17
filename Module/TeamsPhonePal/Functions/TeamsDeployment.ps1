@@ -5,11 +5,11 @@ function TeamsDeployment {
     # End
 
     # Variables that need user definition
-    $MC = Read-Host "Specify Main country of Usage using ISO Code or Country Name"
-    $SBCFQDN = Read-Host "Specify the SBC FQDN"
-    $Port = Read-Host "Specify signalling port of SBC"
-    $Land = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
-    $Mob = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
+    [string]$MC = Read-Host "Specify Main country of Usage using ISO Code or Country Name"
+    [string]$SBCFQDN = Read-Host "Specify the SBC FQDN"
+    [string]$Port = Read-Host "Specify signalling port of SBC"
+    [string]$Land = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
+    [string]$Mob = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
     # End
 
     # Country Validation
@@ -38,15 +38,15 @@ function TeamsDeployment {
     # End
 
     # Telephony Conf
-    $null = TelDep =Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob
+    $null = TelDep =Country "$($MC)" -SBCFQDN "$($SBCFQDN)" -Land "$($Land)" -Mob "$($Mob)"
     
     $confirmation = Read-Host "Do you want to create a set of rules for another Country? [y/n]"
     if ($confirmation -eq 'y*') {
         do {
-            $NC = Read-Host "Specify new country of Usage using ISO Code or Country Name"
-            $NS = Read-Host "Specify the SBC FQDN"
-            $L = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
-            $M = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
+            [string]$NC = Read-Host "Specify new country of Usage using ISO Code or Country Name"
+            [string]$NS = Read-Host "Specify the SBC FQDN"
+            [string]$L = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
+            [string]$M = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
 
             try {
 

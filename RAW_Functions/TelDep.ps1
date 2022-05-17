@@ -1,9 +1,9 @@
 function TelDep {
     param(
-        $Country,
-        $SBCFQDN,
-        $Land,
-        $Mob
+        [string]$Country,
+        [string]$SBCFQDN,
+        [string]$Land,
+        [string]$Mob
     )
 
     if ($Country.Length -gt 2) {

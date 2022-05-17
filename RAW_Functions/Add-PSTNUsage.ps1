@@ -1,6 +1,5 @@
 function Add-PSTNUsage {
     param (
-        [Mandatory]
         $CountryCode
     )
 
