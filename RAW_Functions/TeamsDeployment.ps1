@@ -62,7 +62,6 @@ function TeamsDeployment {
             }
             catch {
                 Write-host "SBC creation failed. Please check whether the FQDN provided is valid"
-                exit
             }
         }
         until ($confirmation -eq "n*")
