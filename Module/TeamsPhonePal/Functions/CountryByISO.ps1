@@ -235,6 +235,6 @@ function CountryByISO {
         "ZW"  = "+263"
     }
 
-    return $CountryLookupHASH[$CC];
+    return $CountryLookupHASH["$($CC)"];
 
 }

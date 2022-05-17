@@ -25,7 +25,7 @@ function TeamsDeployment {
     # End
 
     # SBC Conf
-    $checkSBC = Get-CsOnlinePSTNGateway -Identity $SBCFQDN
+    $checkSBC = Get-CsOnlinePSTNGateway -Identity $SBCFQDN -ErrorAction SilentlyContinue
     if ($null -eq $checkSBC) {
         try {
             $null = SBCConf -FQDN $SBCFQDN -Port $Port
