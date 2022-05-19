@@ -11,14 +11,14 @@ function TelDep {
     }
 
     # Calculated Variables
-    $Prefix = CountryByISO -CC $Country
-    $FDM = $Mob.replace($Prefix, "")[0]
-    $FDL = $Land.Replace($Prefix, "")[0]
+    $Prefix = (CountryByISO -CC $Country)
+    $FDM = $Mob[0]
+    $FDL = $Land[0]
     $MobLength = $Mob.Length
     $LandLength = $Land.Length
-    $MinML = $MobLength - 2
+    $MinML = $MobLength - 1
     $MaxML = $MobLength + 1
-    $MinLL = $LandLength - 2
+    $MinLL = $LandLength - 1
     $MaxLL = $LandLength + 1
     # End
 
