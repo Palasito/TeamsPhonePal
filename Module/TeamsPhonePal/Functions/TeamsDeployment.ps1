@@ -1,5 +1,13 @@
 function TeamsDeployment {
 
+    # param(
+    #     [string]$MC,
+    #     [string]$SBCFQDN,
+    #     [string]$Port,
+    #     [string]$Land,
+    #     [string]$Mob
+    # )
+
     # Authentication
     Connect-MicrosoftTeams
     # End
@@ -13,14 +21,19 @@ function TeamsDeployment {
     # End
 
     # Country Validation
-    switch (CountryValidation -Country $MC) {
-        $null {
-            Write-Host "Could not find country by Lookup. Consider looking up the ISO code and using it in the module"
-            exit
-        }
-        default {
-            # Do nothing !
-        }
+
+    $val = CountryValidation -Country $MC
+
+    if ($null -eq $val) {
+        Write-Host "Could not find country by Lookup. Consider looking up the ISO code and using it in the module" -ForegroundColor Red
+        exit
+    }
+    elseif ($val.IsNullOrWhiteSpace) {
+        Write-Host "Could not find country by Lookup. Consider looking up the ISO code and using it in the module" -ForegroundColor Red
+        exit
+    }
+    else {
+        Write-Host "Country Validation was successful" -ForegroundColor Green
     }
     # End
 
@@ -28,43 +41,53 @@ function TeamsDeployment {
     $checkSBC = Get-CsOnlinePSTNGateway -Identity $SBCFQDN -ErrorAction SilentlyContinue
     if ($null -eq $checkSBC) {
         try {
-            $null = SBCConf -FQDN $SBCFQDN -Port $Port
+            $null = SBCConf -FQDN $SBCFQDN -Port $Port -ErrorAction SilentlyContinue
+            Write-Host "SBC creation with FQDN $($SBCFQDN) was successful" -ForegroundColor Green
         }
         catch {
-            Write-Host "SBC creation failed. Please check whether the FQDN provided is valid"
+            Write-Host "SBC creation failed. Please check whether the FQDN provided is valid" -ForegroundColor Red
             exit
         }
     }
     # End
 
     # Telephony Conf
-    $null = TelDep =Country "$($MC)" -SBCFQDN "$($SBCFQDN)" -Land "$($Land)" -Mob "$($Mob)"
+    $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob
+    Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+    # End
     
     $confirmation = Read-Host "Do you want to create a set of rules for another Country? [y/n]"
-    if ($confirmation -eq 'y*') {
+    if ($confirmation -eq 'y') {
         do {
             [string]$NC = Read-Host "Specify new country of Usage using ISO Code or Country Name"
             [string]$NS = Read-Host "Specify the SBC FQDN"
+            [string]$NP = Read-Host "Specify signalling port of SBC"
             [string]$L = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
             [string]$M = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
 
-            try {
-
-                if ($NS = $SBCFQDN) {
-
-                    $NP = Read-Host "Specify signalling port of SBC"
+            $checkSBC = Get-CsOnlinePSTNGateway -Identity $SBCFQDN -ErrorAction SilentlyContinue
+            if ($null -eq $checkSBC) {
+                try {
                     $null = SBCConf -FQDN $NS -Port $NP
-
+                    Write-host "Creation of SBC with FQDN: $($NS) was successful" -ForegroundColor Green
                 }
+                catch {
+                    Write-Host "SBC creation failed. Please check whether the FQDN provided is valid" -ForegroundColor Red
+                    exit
+                }
+            }
 
+            try {
                 $null = TelDep =Country $NC -SBCFQDN $NS -Land $L -Mob $M
-
+                Write-host "Telephony Rules were created successfully" -ForegroundColor Green
             }
             catch {
-                Write-host "SBC creation failed. Please check whether the FQDN provided is valid"
+
+                Write-host "SBC creation failed. Please check whether the FQDN provided is valid" -ForegroundColor Red
             }
+
         }
-        until ($confirmation -eq "n*")
+        until ($confirmation -eq "n")
     }
     # End
 

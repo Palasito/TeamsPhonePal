@@ -11,9 +11,9 @@ function TelDep {
     }
 
     # Calculated Variables
-    $Prefix = CountryByISO -CC $Country
-    $FDM = $Mob.replace($Prefix, "")[0]
-    $FDL = $Land.Replace($Prefix, "")[0]
+    $Prefix = (CountryByISO -CC $Country)
+    $FDM = $Mob[0]
+    $FDL = $Land[0]
     $MobLength = $Mob.Length
     $LandLength = $Land.Length
     $MinML = $MobLength - 2
