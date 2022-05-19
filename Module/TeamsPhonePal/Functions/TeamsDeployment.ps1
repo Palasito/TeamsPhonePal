@@ -22,15 +22,18 @@ function TeamsDeployment {
 
     # Country Validation
 
-    $val = CountryValidation -Country $MC
-
+    $val = CountryValidation -Country "$($MC)"
     if ($null -eq $val) {
         Write-Host "Could not find country by Lookup. Consider looking up the ISO code and using it in the module" -ForegroundColor Red
-        exit
+        break
     }
-    elseif ($val.IsNullOrWhiteSpace) {
+    elseif ([string]::IsNullOrEmpty($val)) {
         Write-Host "Could not find country by Lookup. Consider looking up the ISO code and using it in the module" -ForegroundColor Red
-        exit
+        break
+    }
+    elseif ([string]::IsNullOrWhiteSpace($val)) {
+        Write-Host "Could not find country by Lookup. Consider looking up the ISO code and using it in the module" -ForegroundColor Red
+        break
     }
     else {
         Write-Host "Country Validation was successful" -ForegroundColor Green
@@ -45,8 +48,8 @@ function TeamsDeployment {
             Write-Host "SBC creation with FQDN $($SBCFQDN) was successful" -ForegroundColor Green
         }
         catch {
-            Write-Host "SBC creation failed. Please check whether the FQDN provided is valid" -ForegroundColor Red
-            exit
+            Write-Host "SBC creation failed. Please check whether the FQDN provided is valid and domain is added in O365" -ForegroundColor Red
+            break
         }
     }
     # End
@@ -73,7 +76,7 @@ function TeamsDeployment {
                 }
                 catch {
                     Write-Host "SBC creation failed. Please check whether the FQDN provided is valid" -ForegroundColor Red
-                    exit
+                    break
                 }
             }
 
