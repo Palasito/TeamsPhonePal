@@ -16,10 +16,10 @@ function TelDep {
     $FDL = $Land[0]
     $MobLength = $Mob.Length
     $LandLength = $Land.Length
-    $MinML = $MobLength - 1
-    $MaxML = $MobLength + 1
-    $MinLL = $LandLength - 1
-    $MaxLL = $LandLength + 1
+    $MinML = $MobLength - 2
+    $MaxML = $MobLength + 2
+    $MinLL = $LandLength - 2
+    $MaxLL = $LandLength + 2
     # End
 
     Add-PSTNUsage -CountryCode $Country
