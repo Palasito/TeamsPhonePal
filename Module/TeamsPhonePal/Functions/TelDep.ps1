@@ -6,11 +6,13 @@ function TelDep {
         [string]$Mob
     )
 
+    #Region Convert Country Full Name to ISO
     if ($Country.Length -gt 2) {
         $Country = (CountryLookup -Country $Country).TwoLetterISORegionName
     }
+    #End
 
-    # Calculated Variables
+    #Region Calculated Variables
     $Prefix = (CountryByISO -CC $Country)
     $FDM = $Mob[0]
     $FDL = $Land[0]
@@ -20,7 +22,7 @@ function TelDep {
     $MaxML = $MobLength + 2
     $MinLL = $LandLength - 2
     $MaxLL = $LandLength + 2
-    # End
+    #Endregion
 
     Add-PSTNUsage -CountryCode $Country
     Add-VRP -CountryCode $Country

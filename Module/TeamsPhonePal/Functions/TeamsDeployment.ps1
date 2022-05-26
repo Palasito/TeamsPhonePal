@@ -11,26 +11,26 @@ function TeamsDeployment {
 
     $csv = GetCSV -ptocsv "$($PathtoCSV)"
 
-    # Check Prerequisite Modules
+    #region Check Prerequisite Modules
     PrerequisiteCheck
-    # End
+    #endregion
 
-    # Authentication
+    #region Authentication
     GetGraphToken
     Connect-MicrosoftTeams
-    # End
+    #endregion
 
-    # Variables that need user definition
+    #region Variables that need user definition
     # [string]$MC = Read-Host "Specify Main country of Usage using ISO Code or Country Name"
     # [string]$SBCFQDN = Read-Host "Specify the SBC FQDN"
     # [string]$Port = Read-Host "Specify signalling port of SBC"
     # [string]$Land = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
     # [string]$Mob = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
-    # End
+    #endregion
 
     foreach ($c in $csv) {
 
-        # Variable Declaration
+        #region Variable Declaration
         [string]$MC = $c.Country
         [string]$SBCFQDN = $c.SBCFQDN
         [string]$Port = $c.Port
@@ -40,9 +40,9 @@ function TeamsDeployment {
         [bool]$Int = $c.International
         [string]$IBC = $c.InternationalByCountry
         $SBCList = Get-CsOnlinePSTNGateway
-        # End
+        #endregion
 
-        # Country Validation
+        #region Country Validation
         $val = CountryValidation -Country "$($MC)"
 
         switch ($val) {
@@ -59,9 +59,9 @@ function TeamsDeployment {
                 Write-Host "Country Validation for $($MC) was successful" -ForegroundColor Green
             }
         }
-        # End
+        #endregion
 
-        # Domain Validation
+        #region Domain Validation
         $Dom = ValidateDomain -Domain $SBCFQDN
         $uri = "https://graph.microsoft.com/beta/domains/$($Dom)"
         $uriu = "https://graph.microsoft.com/beta/users?$select=userPrincipalName"
@@ -83,10 +83,10 @@ function TeamsDeployment {
 
 
         $ucheck = Invoke-RestMethod -Uri $uriu -Method Get -Headers $authToken
-        $u = $ucheck | Where-Object {$_.userPrincipalName -match "$($Dom)"}
-        # End
+        $u = $ucheck | Where-Object { $_.userPrincipalName -match "$($Dom)" }
+        #endregion
 
-        # SBC Conf
+        #region SBC Conf
         $checkSBC = $SBCList | Where-Object { $_.Identity -eq $SBCFQDN }
         switch ($checkSBC.Identity) {
             $null {
@@ -103,19 +103,20 @@ function TeamsDeployment {
                 # Do nothing, it already exists !
             }
         }
-        # End
+        #endregion
+
 
     }
 
-    # Telephony Conf
-    $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob
-    Write-host "Telephony Rules were created successfully" -ForegroundColor Green
-    # End
+
     
 
 
 
-
+    #region Telephony Conf
+    $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob
+    Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+    #endregion
 
     $confirmation = Read-Host "Do you want to create a set of rules for another Country? [y/n]"
     if ($confirmation -eq 'y') {
@@ -150,7 +151,7 @@ function TeamsDeployment {
         }
         until ($confirmation -eq "n")
     }
-    # End
+    #endregion
 
     # $confirmation = Read-Host "Text Here! [y/n]"
     # if ($confirmation -eq 'n') {
