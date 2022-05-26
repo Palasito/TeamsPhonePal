@@ -10,7 +10,7 @@ function TelDep {
     if ($Country.Length -gt 2) {
         $Country = (CountryLookup -Country $Country).TwoLetterISORegionName
     }
-    #End
+    #EndRegion
 
     #Region Calculated Variables
     $Prefix = (CountryByISO -CC $Country)
