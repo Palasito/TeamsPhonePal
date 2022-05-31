@@ -10,4 +10,5 @@ function GetMSALToken {
 
 function GetGraphToken {
     $global:authToken = GetMSALToken
+    return $global:authToken
 }

@@ -20,14 +20,6 @@ function TeamsDeployment {
     Connect-MicrosoftTeams
     #endregion
 
-    #region Variables that need user definition
-    # [string]$MC = Read-Host "Specify Main country of Usage using ISO Code or Country Name"
-    # [string]$SBCFQDN = Read-Host "Specify the SBC FQDN"
-    # [string]$Port = Read-Host "Specify signalling port of SBC"
-    # [string]$Land = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
-    # [string]$Mob = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
-    #endregion
-
     foreach ($c in $csv) {
 
         #region Variable Declaration
@@ -164,6 +156,16 @@ function TeamsDeployment {
     }
     #endregion
 
+
+
+    #region Variables that need user definition
+    # [string]$MC = Read-Host "Specify Main country of Usage using ISO Code or Country Name"
+    # [string]$SBCFQDN = Read-Host "Specify the SBC FQDN"
+    # [string]$Port = Read-Host "Specify signalling port of SBC"
+    # [string]$Land = Read-host "Provide a test Landline phone for validation (excluding the country code eg. 2111122345)"
+    # [string]$Mob = Read-Host "Provide a test Mobile phone for validation (excluding the country code eg. 6911223456)"
+    #endregion
+    
     # $confirmation = Read-Host "Text Here! [y/n]"
     # if ($confirmation -eq 'n') {
     #     # Do Nothing !
