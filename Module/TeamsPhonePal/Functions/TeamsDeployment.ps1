@@ -30,7 +30,7 @@ function TeamsDeployment {
         [string]$Mob = $c.MobileExample
         [bool]$Seg = $c.Seggregation
         [bool]$Int = $c.International
-        [string]$IBC = $c.InternationalByCountry
+        # [string]$IBC = $c.InternationalByCountry
         $SBCList = Get-CsOnlinePSTNGateway
         #endregion
 
