@@ -8,7 +8,7 @@ function Add-VRP {
     if ($Seggregation -eq $true) {
         $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Landlines Only" -OnlinePstnUsages "$($CountryCode)LandlinesOnly"
         $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Local Only" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly"
-        Write-host "Voice Route Policis: (Restricted to $($CountryCode)Landlines Only) and (Restricted to $($CountryCode)Local Only) has been successfully created!" -ForegroundColor Green
+        Write-host "Voice Route Policies: (Restricted to $($CountryCode)Landlines Only) and (Restricted to $($CountryCode)Local Only) has been successfully created!" -ForegroundColor Green
     }
     else {
         $null = New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode) Only" -OnlinePstnUsages "$($CountryCode)"

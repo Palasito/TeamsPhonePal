@@ -28,9 +28,9 @@ function TeamsDeployment {
         [string]$Port = $c.Port
         [string]$Land = $c.LandlineExample
         [string]$Mob = $c.MobileExample
-        [bool]$Seg = $c.Seggregation
-        [bool]$Int = $c.International
-        # [string]$IBC = $c.InternationalByCountry
+        $Seg = [Boolean]$c.Seggregation
+        $Int = [Boolean]$c.International
+        # $IBC = $c.InternationalByCountry
         $SBCList = Get-CsOnlinePSTNGateway
         #endregion
 
@@ -107,19 +107,41 @@ function TeamsDeployment {
             }
         }
         #endregion
-
-
     }
 
-
-    
-
-
-
     #region Telephony Conf
-    $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob
-    Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+
+    switch ($true) {
+        { $Int -and $Seg } {
+            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International -Seggregation
+            Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+        }
+        $Int {
+            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International
+            Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+        }
+        $Seg {
+            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -Seggregation
+            Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+        }
+        Default {
+            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob
+            Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+        }
+    }
     #endregion
+
+
+
+
+
+
+
+
+
+
+
+
 
     $confirmation = Read-Host "Do you want to create a set of rules for another Country? [y/n]"
     if ($confirmation -eq 'y') {

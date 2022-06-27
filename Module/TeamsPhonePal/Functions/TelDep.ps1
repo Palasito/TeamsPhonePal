@@ -3,7 +3,9 @@ function TelDep {
         [string]$Country,
         [string]$SBCFQDN,
         [string]$Land,
-        [string]$Mob
+        [string]$Mob,
+        [switch]$International,
+        [switch]$Seggregation
     )
 
     #Region Convert Country Full Name to ISO
@@ -23,6 +25,21 @@ function TelDep {
     $MinLL = $LandLength - 2
     $MaxLL = $LandLength + 2
     #Endregion
+
+    switch ($true) {
+        { $International -and $Seggregation } {
+
+        }
+        $International {
+
+        }
+        $Seggregation {
+
+        }
+        Default {
+
+        }
+    }
 
     Add-PSTNUsage -CountryCode $Country
     Add-VRP -CountryCode $Country

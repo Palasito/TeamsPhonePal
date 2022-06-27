@@ -24,6 +24,9 @@ function Add-VR {
     if ($International -eq $true) {
         $null = New-CsOnlineVoiceRoute -Identity "$($CountryCode)toInternational" -NumberPattern "^\+(\d{7})+" -OnlinePstnGatewayList $SBC -Priority 1 -OnlinePstnUsages "$($CountryCode)toInternational"
     }
+    else {
+        Write-Host "No international calling has been selected" -ForegroundColor Yellow
+    }
     # $null = New-CsOnlineVoiceRoute -Identity "$($CountryCode)LocalPaid" -NumberPattern "^\$($Prefix)(\d{$($MinLL),$($MaxLL)})$" -OnlinePstnGatewayList $SBC -Priority 1 -OnlinePstnUsages "$($CountryCode)LocalPaid"
     
 }
