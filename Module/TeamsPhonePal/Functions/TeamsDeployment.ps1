@@ -1,11 +1,6 @@
 function TeamsDeployment {
 
     param(
-        # [string]$MC,
-        # [string]$SBCFQDN,
-        # [string]$Port,
-        # [string]$Land,
-        # [string]$Mob,
         $PathtoCSV
     )
 
@@ -30,7 +25,7 @@ function TeamsDeployment {
         [string]$Mob = $c.MobileExample
         $Seg = [Boolean]$c.Seggregation
         $Int = [Boolean]$c.International
-        # $IBC = $c.InternationalByCountry
+        # IBC = $c.InternationalByCountry
         $SBCList = Get-CsOnlinePSTNGateway
         #endregion
 
@@ -93,14 +88,7 @@ function TeamsDeployment {
         $checkSBC = $SBCList | Where-Object { $_.Identity -eq $SBCFQDN }
         switch ($checkSBC.Identity) {
             $null {
-                try {
-                    $null = SBCConf -FQDN $SBCFQDN -Port $Port
-                    Write-Host "SBC creation with FQDN $($SBCFQDN) was successful" -ForegroundColor Green
-                }
-                catch {
-                    Write-Host "SBC creation failed. Please check whether the FQDN provided is valid" -ForegroundColor Red
-                    break
-                }
+                $null = SBCConf -FQDN $SBCFQDN -Port $Port
             }
             Default {
                 # Do nothing, it already exists !
@@ -109,27 +97,26 @@ function TeamsDeployment {
         #endregion
     }
 
-    #region Telephony Conf
-
+    #Region Telephony Conf
     switch ($true) {
         { $Int -and $Seg } {
-            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International -Seggregation
-            Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International -Seggregation 
+            Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
         }
         $Int {
-            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International
-            Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International 
+            Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
         }
         $Seg {
-            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -Seggregation
-            Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -Seggregation 
+            Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
         }
         Default {
-            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob
-            Write-host "Telephony Rules were created successfully" -ForegroundColor Green
+            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob 
+            Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
         }
     }
-    #endregion
+    #EndRegion
 
 
 

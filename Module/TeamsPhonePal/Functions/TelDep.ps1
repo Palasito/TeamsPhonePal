@@ -26,22 +26,31 @@ function TelDep {
     $MaxLL = $LandLength + 2
     #Endregion
 
+    #Region Deployment
     switch ($true) {
         { $International -and $Seggregation } {
-
+            $null = Add-PSTNUsage -CountryCode $Country -International -Seggregation 
+            $null = Add-VRP -CountryCode $Country -International -Seggregation 
+            $null = Add-VR -CountryCode $Country -SBC $SBCFQDN -FDM $FDM -FDL $FDL -MinLL $MinLL -MaxLL $MaxLL -MaxML $MaxML -MinML $MinML -Prefix $Prefix -International -Seggregation 
+            break
         }
         $International {
-
+            $null = Add-PSTNUsage -CountryCode $Country -International 
+            $null = Add-VRP -CountryCode $Country -International 
+            $null = Add-VR -CountryCode $Country -SBC $SBCFQDN -FDM $FDM -FDL $FDL -MinLL $MinLL -MaxLL $MaxLL -MaxML $MaxML -MinML $MinML -Prefix $Prefix -International 
+            break
         }
         $Seggregation {
-
+            $null = Add-PSTNUsage -CountryCode $Country -Seggregation 
+            $null = Add-VRP -CountryCode $Country -Seggregation 
+            $null = Add-VR -CountryCode $Country -SBC $SBCFQDN -FDM $FDM -FDL $FDL -MinLL $MinLL -MaxLL $MaxLL -MaxML $MaxML -MinML $MinML -Prefix $Prefix -Seggregation 
+            break
         }
         Default {
-
+            $null = Add-PSTNUsage -CountryCode $Country 
+            $null = Add-VRP -CountryCode $Country 
+            $null = Add-VR -CountryCode $Country -SBC $SBCFQDN -FDM $FDM -FDL $FDL -MinLL $MinLL -MaxLL $MaxLL -MaxML $MaxML -MinML $MinML -Prefix $Prefix 
         }
     }
-
-    Add-PSTNUsage -CountryCode $Country
-    Add-VRP -CountryCode $Country
-    Add-VR -CountryCode $Country -SBC $SBCFQDN -FDM $FDM -FDL $FDL -MinLL $MinLL -MaxLL $MaxLL -MaxML $MaxML -MinML $MinML -Prefix $Prefix
+    #EndRegion
 }
