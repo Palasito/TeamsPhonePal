@@ -4,7 +4,17 @@ function TeamsDeployment {
         $PathtoCSV
     )
 
-    $csv = GetCSV -ptocsv "$($PathtoCSV)"
+    if ($null -eq $PathtoCSV) {
+        Write-Warning "CSV file path is null. Exiting..."
+        break
+    }
+    elseif (-not (Test-Path $PathtoCSV)) {
+        Write-Warning "CSV file could not be found. Exiting..."
+        break
+    }
+    else {
+        $csv = GetCSV -ptocsv "$PathtoCSV"
+    }
 
     #region Check Prerequisite Modules
     PrerequisiteCheck
@@ -26,7 +36,7 @@ function TeamsDeployment {
         $Seg = [Boolean]$c.Seggregation
         $Int = [Boolean]$c.International
         # IBC = $c.InternationalByCountry
-        $SBCList = Get-CsOnlinePSTNGateway
+        $SBCList = (Get-CsOnlinePSTNGateway).Identity
         #endregion
 
         #region Country Validation
@@ -57,26 +67,35 @@ function TeamsDeployment {
         if ($null -eq $dcheck.id) {
             Write-host "Domain for SBC does not exist in Tenant, configure the domain name first (Verification too)!" -ForegroundColor Yellow
             Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
+            Pause "Press ENTER to exit"
             break
         }
         elseif ($dcheck.isVerified -ne "true") {
             Write-host "Domain for SBC exists but is NOT verified in Tenant, verify the domain name first!" -ForegroundColor Yellow
             Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
+            Pause "Press ENTER to exit"
             break
         }
         else {
             Write-Host "The Domain name $($Dom) is correctly configured and ready to be used with Teams Phone System" -ForegroundColor Green
         }
 
-        $ucheck = Invoke-RestMethod -Uri $uriu -Method Get -Headers $authToken
+        $ucheck = (Invoke-RestMethod -Uri $uriu -Method Get -Headers $authToken).value | Select-Object userPrincipalName
         $u = $ucheck | Where-Object { $_.userPrincipalName -match "$($Dom)" }
-
-        if ($null -eq $u.userPrincipalName) {
+        $uresult = ""
+        foreach ($user in $u) {
+            if ((Get-CsOnlineUser $user.userPrincipalName).assignedplan -match 'MCOEV') {
+                $uresult = "Success"
+            }
+        }
+        if ($null -eq $u) {
             Write-host "Required user does not exist in Tenant, configure the user first (Licenses too)!" -ForegroundColor Yellow
+            Pause "Press ENTER to exit"
             break
         }
-        elseif ($null -eq ((Get-CsOnlineUser $u.userPrincipalName).assignedplan -match 'MCOEV')) {
+        elseif ([string]::IsNullOrEmpty($uresult)) {
             Write-host "Required user exists but does NOT have a teams Phone System License, add the license to the user and try again!" -ForegroundColor Yellow
+            Pause "Press ENTER to exit"
             break
         }
         else {
@@ -84,36 +103,67 @@ function TeamsDeployment {
         }
         #endregion
 
-        #region SBC Conf
-        $checkSBC = $SBCList | Where-Object { $_.Identity -eq $SBCFQDN }
-        switch ($checkSBC.Identity) {
-            $null {
-                $null = SBCConf -FQDN $SBCFQDN -Port $Port
-            }
-            Default {
-                # Do nothing, it already exists !
-            }
+        Start-Sleep 10
+        #region SBC Confex
+        # $checkSBC = $SBCList | Where-Object { $_.Identity -eq $SBCFQDN }
+        if ($SBCList -contains $SBCFQDN) {
+            # Do Nothing
         }
+        else {
+            SBCConf -FQDN $SBCFQDN -Port $Port
+        }
+        # switch ($checkSBC.Identity) {
+        #     $null {
+        #         $null = SBCConf -FQDN $SBCFQDN -Port $Port
+        #     }
+        #     Default {
+        #         # Do nothing, it already exists !
+        #     }
+        # }
         #endregion
     }
 
+    Start-Sleep 10
     #Region Telephony Conf
     switch ($true) {
         { $Int -and $Seg } {
-            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International -Seggregation 
-            Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+            try {
+                TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International -Seggregation 
+                Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+            }
+            catch {
+                throw
+            }
+            break
         }
         $Int {
-            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International 
-            Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+            try {
+                TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International 
+                Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+            }
+            catch {
+                throw
+            }
+            break
         }
         $Seg {
-            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -Seggregation 
-            Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+            try {
+                TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -Seggregation 
+                Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+            }
+            catch {
+                throw
+            }
+            break
         }
         Default {
-            $null = TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob 
-            Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+            try {
+                TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob 
+                Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+            }
+            catch {
+                throw
+            }
         }
     }
     #EndRegion

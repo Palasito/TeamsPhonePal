@@ -3,7 +3,13 @@ function GetCSV {
         $ptocsv
     )
 
-    $csv = Import-Csv -Path $ptocsv
+    try {
+        $csv = Import-Csv -Path $ptocsv
+        return $csv
+    }
+    catch {
+        Write-Error $_
+        break
+    }
 
-    return $csv
 }

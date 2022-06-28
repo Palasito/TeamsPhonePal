@@ -15,5 +15,5 @@ function ValidateDomain {
 
     $dn = [string]::Join($sep, $dn)
 
-    
+    return $dn
 }
