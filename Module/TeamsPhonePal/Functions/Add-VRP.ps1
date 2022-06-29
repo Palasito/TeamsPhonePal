@@ -62,7 +62,19 @@ function Add-VRP {
     #EndRegion
     
     #Region Deployment with International
-    if ($International -eq $true -and $CheckVRP -notcontains "Tag:Unrestricted $($CountryCode)Local to International") {
+    if($International -eq $true -and $Seggregation -eq $false -and $CheckVRP -notcontains "Tag:Unrestricted $($CountryCode)Local to International") {
+        try {
+            New-CsOnlineVoiceRoutingPolicy -Identity "Unrestricted $($CountryCode)Local to International" -OnlinePstnUsages "$($CountryCode)", "$($CountryCode)toInternational" | Out-Null
+            Write-host "Voice Route Policy: (Unrestricted $($CountryCode)Local to International) has been successfully created!" -ForegroundColor Green
+        }
+        catch {
+            Write-Warning "Failed to create voice routing policy: Unrestricted $($CountryCode)Local to International! Stopping deployment..."
+            Write-Warning "Please resolve error shown below!"
+            $_ 
+            throw
+        }
+    }
+    elseif ($International -eq $true -and $CheckVRP -notcontains "Tag:Unrestricted $($CountryCode)Local to International") {
         try {
             New-CsOnlineVoiceRoutingPolicy -Identity "Unrestricted $($CountryCode)Local to International" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly", "$($CountryCode)toInternational" | Out-Null
             Write-host "Voice Route Policy: (Unrestricted $($CountryCode)Local to International) has been successfully created!" -ForegroundColor Green

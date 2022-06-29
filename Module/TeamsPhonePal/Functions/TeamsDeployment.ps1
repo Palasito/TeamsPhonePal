@@ -20,9 +20,10 @@ function TeamsDeployment {
     PrerequisiteCheck
     #endregion
 
+    Write-Host "Please wait for the Pop-Up to connect to the specified online services..." -ForegroundColor Cyan
     #region Authentication
-    GetGraphToken
-    Connect-MicrosoftTeams
+    GetGraphToken | Out-Null
+    Connect-MicrosoftTeams | Out-Null
     #endregion
 
     foreach ($c in $csv) {
@@ -67,13 +68,13 @@ function TeamsDeployment {
         if ($null -eq $dcheck.id) {
             Write-host "Domain for SBC does not exist in Tenant, configure the domain name first (Verification too)!" -ForegroundColor Yellow
             Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
-            Pause "Press ENTER to exit"
+            Pause 
             break
         }
         elseif ($dcheck.isVerified -ne "true") {
             Write-host "Domain for SBC exists but is NOT verified in Tenant, verify the domain name first!" -ForegroundColor Yellow
             Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
-            Pause "Press ENTER to exit"
+            Pause
             break
         }
         else {
@@ -90,12 +91,12 @@ function TeamsDeployment {
         }
         if ($null -eq $u) {
             Write-host "Required user does not exist in Tenant, configure the user first (Licenses too)!" -ForegroundColor Yellow
-            Pause "Press ENTER to exit"
+            Pause 
             break
         }
         elseif ([string]::IsNullOrEmpty($uresult)) {
             Write-host "Required user exists but does NOT have a teams Phone System License, add the license to the user and try again!" -ForegroundColor Yellow
-            Pause "Press ENTER to exit"
+            Pause 
             break
         }
         else {
@@ -107,7 +108,7 @@ function TeamsDeployment {
         #region SBC Confex
         # $checkSBC = $SBCList | Where-Object { $_.Identity -eq $SBCFQDN }
         if ($SBCList -contains $SBCFQDN) {
-            # Do Nothing
+            Write-Warning "SBC with identity $($SBCFQDN) already exists and will not be altered!"
         }
         else {
             SBCConf -FQDN $SBCFQDN -Port $Port
@@ -121,58 +122,59 @@ function TeamsDeployment {
         #     }
         # }
         #endregion
+    
+
+        Start-Sleep 10
+        #Region Telephony Conf
+        switch ($true) {
+            { $Int -and $Seg } {
+                try {
+                    TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International -Seggregation 
+                    Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+                }
+                catch {
+                    throw
+                }
+                break
+            }
+            $Int {
+                try {
+                    TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International 
+                    Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+                }
+                catch {
+                    throw
+                }
+                break
+            }
+            $Seg {
+                try {
+                    TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -Seggregation 
+                    Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+                }
+                catch {
+                    throw
+                }
+                break
+            }
+            Default {
+                try {
+                    TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob 
+                    Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
+                }
+                catch {
+                    throw
+                }
+            }
+        }
+        #EndRegion
+
+        # $confirmation = Read-Host "Text Here! [y/n]"
+        # if ($confirmation -eq 'n') {
+        #     # Do Nothing !
+        # }
+        # if ($confirmation -eq 'y') {
+
+        # }
     }
-
-    Start-Sleep 10
-    #Region Telephony Conf
-    switch ($true) {
-        { $Int -and $Seg } {
-            try {
-                TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International -Seggregation 
-                Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
-            }
-            catch {
-                throw
-            }
-            break
-        }
-        $Int {
-            try {
-                TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -International 
-                Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
-            }
-            catch {
-                throw
-            }
-            break
-        }
-        $Seg {
-            try {
-                TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob -Seggregation 
-                Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
-            }
-            catch {
-                throw
-            }
-            break
-        }
-        Default {
-            try {
-                TelDep -Country $MC -SBCFQDN $SBCFQDN -Land $Land -Mob $Mob 
-                Write-host "All Telephony Rules were created successfully" -ForegroundColor Green
-            }
-            catch {
-                throw
-            }
-        }
-    }
-    #EndRegion
-
-    # $confirmation = Read-Host "Text Here! [y/n]"
-    # if ($confirmation -eq 'n') {
-    #     # Do Nothing !
-    # }
-    # if ($confirmation -eq 'y') {
-
-    # }
 }
