@@ -106,7 +106,6 @@ function TeamsDeployment {
 
         Start-Sleep 10
         #region SBC Confex
-        # $checkSBC = $SBCList | Where-Object { $_.Identity -eq $SBCFQDN }
         if ($SBCList -contains $SBCFQDN) {
             Write-Warning "SBC with identity $($SBCFQDN) already exists and will not be altered!"
         }
