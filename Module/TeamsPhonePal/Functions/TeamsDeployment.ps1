@@ -23,7 +23,12 @@ function TeamsDeployment {
 
     Write-Host "Please wait for the Pop-Up to connect to the specified online services..." -ForegroundColor Cyan
     #region Authentication
-    GetGraphToken | Out-Null
+    if($SkipValidation) {
+
+    }
+    else {
+        GetGraphToken | Out-Null
+    }
     Connect-MicrosoftTeams | Out-Null
     #endregion
 
@@ -64,7 +69,7 @@ function TeamsDeployment {
         if ($SkipValidation) {
             Write-Host "Validation has been skipped due to the switch being present !"
         }
-        
+
         else {
             
             $Dom = ValidateDomain -Domain $SBCFQDN
