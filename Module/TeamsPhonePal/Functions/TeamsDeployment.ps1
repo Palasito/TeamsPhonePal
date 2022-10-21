@@ -23,7 +23,7 @@ function TeamsDeployment {
 
     Write-Host "Please wait for the Pop-Up to connect to the specified online services..." -ForegroundColor Cyan
     #region Authentication
-    if($SkipValidation) {
+    if ($SkipValidation) {
 
     }
     else {
