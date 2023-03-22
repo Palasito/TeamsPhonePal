@@ -71,35 +71,41 @@ function TeamsDeployment {
         }
 
         else {
-            
-            $Dom = ValidateDomain -Domain $SBCFQDN
 
-            if ($Dom.EndsWith("modulus.gr")) {
-
+            if ($SBCFQDN.EndsWith("modulus.gr") -and $SBCFQDN.Contains("|")) {
+                $Dom = $SBCFQDN.Split("|")
             }
 
             else {
-                $uri = "https://graph.microsoft.com/beta/domains/$($Dom)"
+                $Dom = ValidateDomain -Domain $SBCFQDN
+            }
+
+            foreach ($td in $Dom) {
+
+                $uri = "https://graph.microsoft.com/beta/domains/$($td)"
                 $dcheck = Invoke-RestMethod -Uri $uri -Method Get -Headers $authToken
+
                 if ($null -eq $dcheck.id) {
                     Write-host "Domain for SBC does not exist in Tenant, configure the domain name first (Verification too)!" -ForegroundColor Yellow
                     Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
                     Pause 
                     exit
                 }
+
                 elseif ($dcheck.isVerified -ne "true") {
                     Write-host "Domain for SBC exists but is NOT verified in Tenant, verify the domain name first!" -ForegroundColor Yellow
                     Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
                     Pause
                     exit
                 }
+
                 else {
-                    Write-Host "The Domain name $($Dom) is correctly configured and ready to be used with Teams Phone System" -ForegroundColor Green
+                    Write-Host "The Domain name $($td) is correctly configured and ready to be used with Teams Phone System" -ForegroundColor Green
                 }
 
                 $uriu = "https://graph.microsoft.com/beta/users?$select=userPrincipalName"
                 $ucheck = (Invoke-RestMethod -Uri $uriu -Method Get -Headers $authToken).value | Select-Object userPrincipalName
-                $u = $ucheck | Where-Object { $_.userPrincipalName -match "$($Dom)" }
+                $u = $ucheck | Where-Object { $_.userPrincipalName -match "$($td)" }
                 $uresult = ""
                 foreach ($user in $u) {
                     if ((Get-CsOnlineUser $user.userPrincipalName).assignedplan -match 'MCOEV') {
@@ -117,7 +123,7 @@ function TeamsDeployment {
                     exit
                 }
                 else {
-                    Write-Host "Required user with suffix $($Dom) is correctly configured! Setup can proceed!" -ForegroundColor Green
+                    Write-Host "Required user with suffix $($td) is correctly configured! Setup can proceed!" -ForegroundColor Green
                 }
             }
             
