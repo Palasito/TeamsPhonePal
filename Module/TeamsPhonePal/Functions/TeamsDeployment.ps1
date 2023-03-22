@@ -132,6 +132,7 @@ function TeamsDeployment {
             {"*modulus.gr" -and "*|*"} {
                 $SBCFQDN = ($SBCFQDN.Split("|"))
                 $SBCFQDN = [string]::Join(",", $SBCFQDN)
+                break
             }
             "*modulus.gr" {
                 Write-Warning "Invalid or non existent separator between SBC modulus FQDNs"
@@ -139,7 +140,7 @@ function TeamsDeployment {
                 exit
             }
             default {
-
+                
                 if ($SBCList -contains $SBCFQDN) {
                     Write-Warning "SBC with identity $($SBCFQDN) already exists and will not be altered!"
                 }
