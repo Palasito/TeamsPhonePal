@@ -127,19 +127,25 @@ function TeamsDeployment {
         Start-Sleep 10
 
         #region SBC Config
+        switch -Wildcard ($SBCFQDN) {
 
-        if ($SBCFQDN.EndsWith("modulus.gr")) {
-            $SBCFQDN = ($SBCFQDN.Split("|"))
-            $SBCFQDN = [string]::Join(",", $SBCFQDN)
-        }
-
-        else {
-
-            if ($SBCList -contains $SBCFQDN) {
-                Write-Warning "SBC with identity $($SBCFQDN) already exists and will not be altered!"
+            {"*modulus.gr" -and "*|*"} {
+                $SBCFQDN = ($SBCFQDN.Split("|"))
+                $SBCFQDN = [string]::Join(",", $SBCFQDN)
             }
-            else {
-                SBCConf -FQDN $SBCFQDN -Port $Port
+            "*modulus.gr" {
+                Write-Warning "Invalid or non existent separator between SBC modulus FQDNs"
+                Pause
+                exit
+            }
+            default {
+
+                if ($SBCList -contains $SBCFQDN) {
+                    Write-Warning "SBC with identity $($SBCFQDN) already exists and will not be altered!"
+                }
+                else {
+                    SBCConf -FQDN $SBCFQDN -Port $Port
+                }
             }
         }
         #endregion
