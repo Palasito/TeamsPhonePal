@@ -14,7 +14,7 @@ function TeamsDeployment {
         break
     }
     else {
-        $csv = GetCSV -ptocsv "$PathtoCSV"
+        $csv = Import-Csv -Path $ptocsv
     }
 
     #region Check Prerequisite Modules
