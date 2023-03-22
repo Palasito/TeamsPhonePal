@@ -18,7 +18,7 @@ function Add-PSTNUsage {
         catch {
             Write-Warning "Failed to create PSTN usage: $($CountryCode)LandlinesOnly! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_
+            $Error[0]
             throw
         }
     }
@@ -34,7 +34,7 @@ function Add-PSTNUsage {
         catch {
             Write-Warning "Failed to create PSTN usage: $($CountryCode)MobilesOnly! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_
+            $Error[0]
             throw
         }
     }
@@ -52,7 +52,7 @@ function Add-PSTNUsage {
         catch {
             Write-Warning "Failed to create PSTN usage: $($CountryCode)! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_
+            $Error[0]
             throw
         }
     }
@@ -70,7 +70,7 @@ function Add-PSTNUsage {
         catch {
             Write-Warning "Failed to create PSTN usage: $($CountryCode)toInternational! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_
+            $Error[0]
             throw
         }
     }
