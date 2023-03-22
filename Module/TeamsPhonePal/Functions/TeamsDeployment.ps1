@@ -81,13 +81,13 @@ function TeamsDeployment {
                 Write-host "Domain for SBC does not exist in Tenant, configure the domain name first (Verification too)!" -ForegroundColor Yellow
                 Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
                 Pause 
-                break
+                exit
             }
             elseif ($dcheck.isVerified -ne "true") {
                 Write-host "Domain for SBC exists but is NOT verified in Tenant, verify the domain name first!" -ForegroundColor Yellow
                 Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
                 Pause
-                break
+                exit
             }
             else {
                 Write-Host "The Domain name $($Dom) is correctly configured and ready to be used with Teams Phone System" -ForegroundColor Green
@@ -104,12 +104,12 @@ function TeamsDeployment {
             if ($null -eq $u) {
                 Write-host "Required user does not exist in Tenant, configure the user first (Licenses too)!" -ForegroundColor Yellow
                 Pause 
-                break
+                exit
             }
             elseif ([string]::IsNullOrEmpty($uresult)) {
                 Write-host "Required user exists but does NOT have a teams Phone System License, add the license to the user and try again!" -ForegroundColor Yellow
                 Pause 
-                break
+                exit
             }
             else {
                 Write-Host "Required user with suffix $($Dom) is correctly configured! Setup can proceed!" -ForegroundColor Green
@@ -118,7 +118,7 @@ function TeamsDeployment {
         #endregion
 
         Start-Sleep 10
-        #region SBC Confex
+        #region SBC Config
         if ($SBCList -contains $SBCFQDN) {
             Write-Warning "SBC with identity $($SBCFQDN) already exists and will not be altered!"
         }
