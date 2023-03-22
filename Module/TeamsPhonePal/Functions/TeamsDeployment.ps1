@@ -126,7 +126,6 @@ function TeamsDeployment {
                     Write-Host "Required user with suffix $($td) is correctly configured! Setup can proceed!" -ForegroundColor Green
                 }
             }
-            
         }
         #endregion
 
