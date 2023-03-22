@@ -73,66 +73,75 @@ function TeamsDeployment {
         else {
             
             $Dom = ValidateDomain -Domain $SBCFQDN
-            $uri = "https://graph.microsoft.com/beta/domains/$($Dom)"
-            $uriu = "https://graph.microsoft.com/beta/users?$select=userPrincipalName"
 
-            $dcheck = Invoke-RestMethod -Uri $uri -Method Get -Headers $authToken
-            if ($null -eq $dcheck.id) {
-                Write-host "Domain for SBC does not exist in Tenant, configure the domain name first (Verification too)!" -ForegroundColor Yellow
-                Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
-                Pause 
-                exit
+            if ($Dom.EndsWith("modulus.gr")) {
+
             }
-            elseif ($dcheck.isVerified -ne "true") {
-                Write-host "Domain for SBC exists but is NOT verified in Tenant, verify the domain name first!" -ForegroundColor Yellow
-                Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
-                Pause
-                exit
-            }
+
             else {
-                Write-Host "The Domain name $($Dom) is correctly configured and ready to be used with Teams Phone System" -ForegroundColor Green
-            }
+                $uri = "https://graph.microsoft.com/beta/domains/$($Dom)"
+                $dcheck = Invoke-RestMethod -Uri $uri -Method Get -Headers $authToken
+                if ($null -eq $dcheck.id) {
+                    Write-host "Domain for SBC does not exist in Tenant, configure the domain name first (Verification too)!" -ForegroundColor Yellow
+                    Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
+                    Pause 
+                    exit
+                }
+                elseif ($dcheck.isVerified -ne "true") {
+                    Write-host "Domain for SBC exists but is NOT verified in Tenant, verify the domain name first!" -ForegroundColor Yellow
+                    Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
+                    Pause
+                    exit
+                }
+                else {
+                    Write-Host "The Domain name $($Dom) is correctly configured and ready to be used with Teams Phone System" -ForegroundColor Green
+                }
 
-            $ucheck = (Invoke-RestMethod -Uri $uriu -Method Get -Headers $authToken).value | Select-Object userPrincipalName
-            $u = $ucheck | Where-Object { $_.userPrincipalName -match "$($Dom)" }
-            $uresult = ""
-            foreach ($user in $u) {
-                if ((Get-CsOnlineUser $user.userPrincipalName).assignedplan -match 'MCOEV') {
-                    $uresult = "Success"
+                $uriu = "https://graph.microsoft.com/beta/users?$select=userPrincipalName"
+                $ucheck = (Invoke-RestMethod -Uri $uriu -Method Get -Headers $authToken).value | Select-Object userPrincipalName
+                $u = $ucheck | Where-Object { $_.userPrincipalName -match "$($Dom)" }
+                $uresult = ""
+                foreach ($user in $u) {
+                    if ((Get-CsOnlineUser $user.userPrincipalName).assignedplan -match 'MCOEV') {
+                        $uresult = "Success"
+                    }
+                }
+                if ($null -eq $u) {
+                    Write-host "Required user does not exist in Tenant, configure the user first (Licenses too)!" -ForegroundColor Yellow
+                    Pause 
+                    exit
+                }
+                elseif ([string]::IsNullOrEmpty($uresult)) {
+                    Write-host "Required user exists but does NOT have a teams Phone System License, add the license to the user and try again!" -ForegroundColor Yellow
+                    Pause 
+                    exit
+                }
+                else {
+                    Write-Host "Required user with suffix $($Dom) is correctly configured! Setup can proceed!" -ForegroundColor Green
                 }
             }
-            if ($null -eq $u) {
-                Write-host "Required user does not exist in Tenant, configure the user first (Licenses too)!" -ForegroundColor Yellow
-                Pause 
-                exit
-            }
-            elseif ([string]::IsNullOrEmpty($uresult)) {
-                Write-host "Required user exists but does NOT have a teams Phone System License, add the license to the user and try again!" -ForegroundColor Yellow
-                Pause 
-                exit
-            }
-            else {
-                Write-Host "Required user with suffix $($Dom) is correctly configured! Setup can proceed!" -ForegroundColor Green
-            }
+            
         }
         #endregion
 
         Start-Sleep 10
+
         #region SBC Config
-        if ($SBCList -contains $SBCFQDN) {
-            Write-Warning "SBC with identity $($SBCFQDN) already exists and will not be altered!"
+
+        if ($SBCFQDN.EndsWith("modulus.gr")) {
+            $SBCFQDN = ($SBCFQDN.Split("|"))
+            $SBCFQDN = [string]::Join(",", $SBCFQDN)
         }
+
         else {
-            SBCConf -FQDN $SBCFQDN -Port $Port
+
+            if ($SBCList -contains $SBCFQDN) {
+                Write-Warning "SBC with identity $($SBCFQDN) already exists and will not be altered!"
+            }
+            else {
+                SBCConf -FQDN $SBCFQDN -Port $Port
+            }
         }
-        # switch ($checkSBC.Identity) {
-        #     $null {
-        #         $null = SBCConf -FQDN $SBCFQDN -Port $Port
-        #     }
-        #     Default {
-        #         # Do nothing, it already exists !
-        #     }
-        # }
         #endregion
     
 
