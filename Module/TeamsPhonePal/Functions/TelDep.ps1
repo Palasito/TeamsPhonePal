@@ -30,8 +30,8 @@ function TelDep {
     switch ($true) {
         { $International -and $Seggregation } {
             try {
-                Add-PSTNUsage -CountryCode $Country -International -Seggregation 
-                Add-VRP -CountryCode $Country -International -Seggregation 
+                Add-PSTNUsage -CountryCode $Country -International -Seggregation
+                Add-VRP -CountryCode $Country -International -Seggregation
                 Add-VR -CountryCode $Country -SBC $SBCFQDN -FDM $FDM -FDL $FDL -MinLL $MinLL -MaxLL $MaxLL -MaxML $MaxML -MinML $MinML -Prefix $Prefix -International -Seggregation
             }
             catch {
@@ -41,9 +41,9 @@ function TelDep {
         }
         $International {
             try {
-                Add-PSTNUsage -CountryCode $Country -International 
-                Add-VRP -CountryCode $Country -International 
-                Add-VR -CountryCode $Country -SBC $SBCFQDN -FDM $FDM -FDL $FDL -MinLL $MinLL -MaxLL $MaxLL -MaxML $MaxML -MinML $MinML -Prefix $Prefix -International 
+                Add-PSTNUsage -CountryCode $Country -International
+                Add-VRP -CountryCode $Country -International
+                Add-VR -CountryCode $Country -SBC $SBCFQDN -FDM $FDM -FDL $FDL -MinLL $MinLL -MaxLL $MaxLL -MaxML $MaxML -MinML $MinML -Prefix $Prefix -International
             }
             catch {
                 throw

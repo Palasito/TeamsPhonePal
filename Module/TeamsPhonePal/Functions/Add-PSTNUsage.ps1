@@ -12,7 +12,7 @@ function Add-PSTNUsage {
     #Region Deployment With Seggregation
     if ($Seggregation -eq $true -and $ExistingPSTNUsage -notcontains "$($CountryCode)LandlinesOnly") {
         try {
-            Set-CsOnlinePstnUsage -Identity Global -Usage @{add = "$($CountryCode)LandlinesOnly" } | Out-Null
+            Set-CsOnlinePstnUsage -Identity Global -Usage @{add = "$($CountryCode)LandlinesOnly" } -ErrorAction Stop | Out-Null
             Write-Host "PSTN Usage $($CountryCode)LandlinesOnly has been created successfully" -ForegroundColor Green
         }
         catch {
@@ -28,7 +28,7 @@ function Add-PSTNUsage {
 
     if ($Seggregation -eq $true -and $ExistingPSTNUsage -notcontains "$($CountryCode)MobilesOnly") {
         try {
-            Set-CsOnlinePstnUsage -Identity Global -Usage @{add = "$($CountryCode)MobilesOnly" } | Out-Null
+            Set-CsOnlinePstnUsage -Identity Global -Usage @{add = "$($CountryCode)MobilesOnly" } -ErrorAction Stop | Out-Null
             Write-Host "PSTN Usage $($CountryCode)MobilesOnly has been created successfully" -ForegroundColor Green
         }
         catch {
@@ -46,7 +46,7 @@ function Add-PSTNUsage {
     #Region Deployment Without Seggregation
     if ($Seggregation -eq $false -and $ExistingPSTNUsage -notcontains "$($CountryCode)") {
         try {
-            Set-CsOnlinePstnUsage -Identity Global -Usage @{add = "$($CountryCode)" } | Out-Null
+            Set-CsOnlinePstnUsage -Identity Global -Usage @{add = "$($CountryCode)" } -ErrorAction Stop | Out-Null
             Write-Host "PSTN Usage $($CountryCode) has been created successfully!" -ForegroundColor Green
         }
         catch {
@@ -64,7 +64,7 @@ function Add-PSTNUsage {
     #Region International Switch
     if ($International -eq $true -and $ExistingPSTNUsage -notcontains "$($CountryCode)toInternational") {
         try {
-            Set-CsOnlinePstnUsage -Identity Global -Usage @{add = "$($CountryCode)toInternational" } | Out-Null
+            Set-CsOnlinePstnUsage -Identity Global -Usage @{add = "$($CountryCode)toInternational" } -ErrorAction Stop | Out-Null
             Write-Host "PSTN Usage $($CountryCode)toInternational has been created successfully" -ForegroundColor Green
         }
         catch {

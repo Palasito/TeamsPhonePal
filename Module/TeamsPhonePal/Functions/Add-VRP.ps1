@@ -12,13 +12,13 @@ function Add-VRP {
     #Region Deployment with Seggregation
     if ($Seggregation -eq $true -and $CheckVRP -notcontains "Tag:Restricted to $($CountryCode)Landlines Only") {
         try {
-            New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Landlines Only" -OnlinePstnUsages "$($CountryCode)LandlinesOnly" | Out-Null
+            New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Landlines Only" -OnlinePstnUsages "$($CountryCode)LandlinesOnly" -ErrorAction Stop| Out-Null
             Write-host "Voice Route Policy: (Restricted to $($CountryCode)Landlines Only) has been successfully created!" -ForegroundColor Green
         }
         catch {
             Write-Warning "Failed to create voice routing policy: Restricted to $($CountryCode)Landlines Only! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_ 
+            $Error[0]
             throw
         }
     }
@@ -28,13 +28,13 @@ function Add-VRP {
 
     if ($Seggregation -eq $true -and $CheckVRP -notcontains "Tag:Restricted to $($CountryCode)Local Only") {
         try {
-            New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Local Only" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly" | Out-Null
+            New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode)Local Only" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly" -ErrorAction Stop | Out-Null
             Write-host "Voice Route Policy: (Restricted to $($CountryCode)Local Only) has been successfully created!" -ForegroundColor Green
         }
         catch {
             Write-Warning "Failed to create voice routing policy: Restricted to $($CountryCode)Local Only! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_
+            $Error[0]
             throw
         }
     }
@@ -46,13 +46,13 @@ function Add-VRP {
     #Region Deployment without Seggregation
     if ($Seggregation -eq $false -and $CheckVRP -notcontains "Tag:Restricted to $($CountryCode) Only") {
         try {
-            New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode) Only" -OnlinePstnUsages "$($CountryCode)" | Out-Null
+            New-CsOnlineVoiceRoutingPolicy -Identity "Restricted to $($CountryCode) Only" -OnlinePstnUsages "$($CountryCode)" -ErrorAction Stop | Out-Null
             Write-host "Voice Route Policy: (Restricted to $($CountryCode) Only) has been successfully created!" -ForegroundColor Green
         }
         catch {
             Write-Warning "Failed to create voice routing policy: Restricted to $($CountryCode) Only! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_ 
+            $Error[0]
             throw
         }
     }
@@ -64,25 +64,25 @@ function Add-VRP {
     #Region Deployment with International
     if($International -eq $true -and $Seggregation -eq $false -and $CheckVRP -notcontains "Tag:Unrestricted $($CountryCode)Local to International") {
         try {
-            New-CsOnlineVoiceRoutingPolicy -Identity "Unrestricted $($CountryCode)Local to International" -OnlinePstnUsages "$($CountryCode)", "$($CountryCode)toInternational" | Out-Null
+            New-CsOnlineVoiceRoutingPolicy -Identity "Unrestricted $($CountryCode)Local to International" -OnlinePstnUsages "$($CountryCode)", "$($CountryCode)toInternational" -ErrorAction Stop | Out-Null
             Write-host "Voice Route Policy: (Unrestricted $($CountryCode)Local to International) has been successfully created!" -ForegroundColor Green
         }
         catch {
             Write-Warning "Failed to create voice routing policy: Unrestricted $($CountryCode)Local to International! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_ 
+            $Error[0]
             throw
         }
     }
     elseif ($International -eq $true -and $CheckVRP -notcontains "Tag:Unrestricted $($CountryCode)Local to International") {
         try {
-            New-CsOnlineVoiceRoutingPolicy -Identity "Unrestricted $($CountryCode)Local to International" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly", "$($CountryCode)toInternational" | Out-Null
+            New-CsOnlineVoiceRoutingPolicy -Identity "Unrestricted $($CountryCode)Local to International" -OnlinePstnUsages "$($CountryCode)MobilesOnly", "$($CountryCode)LandlinesOnly", "$($CountryCode)toInternational" -ErrorAction Stop | Out-Null
             Write-host "Voice Route Policy: (Unrestricted $($CountryCode)Local to International) has been successfully created!" -ForegroundColor Green
         }
         catch {
             Write-Warning "Failed to create voice routing policy: Unrestricted $($CountryCode)Local to International! Stopping deployment..."
             Write-Warning "Please resolve error shown below!"
-            $_ 
+            $Error[0]
             throw
         }
     }
