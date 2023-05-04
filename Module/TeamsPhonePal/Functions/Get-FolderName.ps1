@@ -1,11 +1,9 @@
-function Get-FolderName {
+# function Get-FolderName {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$false, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position=0)]
         [string]$Message = "Select a directory to save the Log File!!",
-
-        [string]$InitialDirectory = [System.Environment+SpecialFolder]::MyDocuments,
-
+        [string]$InitialDirectory = [System.Environment+SpecialFolder]::MyComputer,
         [switch]$ShowNewFolderButton
     )
 
@@ -30,4 +28,4 @@ function Get-FolderName {
     [System.GC]::WaitForPendingFinalizers()
 
     return $result
-}
+# }

@@ -2,7 +2,7 @@ function TeamsDeployment {
 
     param(
         $PathtoCSV,
-        $SkipValidation
+        [switch]$SkipValidation
     )
 
     if ($null -eq $PathtoCSV) {
