@@ -14,7 +14,7 @@ function TeamsDeployment {
         break
     }
     else {
-        $csv = Import-Csv -Path $ptocsv
+        $csv = Import-Csv -Path $PathtoCSV
     }
 
     #region Check Prerequisite Modules
@@ -89,14 +89,14 @@ function TeamsDeployment {
                     Write-host "Domain for SBC does not exist in Tenant, configure the domain name first (Verification too)!" -ForegroundColor Yellow
                     Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
                     Pause 
-                    exit
+                    break
                 }
 
                 elseif ($dcheck.isVerified -ne "true") {
                     Write-host "Domain for SBC exists but is NOT verified in Tenant, verify the domain name first!" -ForegroundColor Yellow
                     Write-Host "Do not forget to Add a user with a phone license and the new domain suffix before continuing!" -ForegroundColor Magenta
                     Pause
-                    exit
+                    break
                 }
 
                 else {

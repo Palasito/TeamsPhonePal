@@ -1,4 +1,4 @@
-# function Get-FolderName {
+function Get-FolderName {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory=$false, ValueFromPipeline=$true, ValueFromPipelineByPropertyName=$true, Position=0)]
@@ -28,4 +28,4 @@
     [System.GC]::WaitForPendingFinalizers()
 
     return $result
-# }
+}
