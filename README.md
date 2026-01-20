@@ -68,7 +68,7 @@ Create a CSV file with the following structure:
 
 \\\csv
 Country,SBCFQDN,Port,LandlineExample,MobileExample,Seggregation,International
-Greece,sbc1.example.com,5061,2102714669,6977155769,yes,yes
+Greece,sbc1.example.com,5061,2102724669,6977155869,yes,yes
 Italy,sbc2.example.com,5062,0612345678,3331234567,no,yes
 Spain,sbc3.example.com,5063,915551234,612345678,yes,no
 \\\
