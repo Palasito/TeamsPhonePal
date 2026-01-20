@@ -278,7 +278,7 @@ You can configure multiple SBCs for redundancy:
 
 \\\csv
 Country,SBCFQDN,Port,LandlineExample,MobileExample,Seggregation,International
-Greece,sbc1.contoso.com|sbc2.contoso.com,5061,2102714669,6977155769,yes,yes
+Greece,sbc1.contoso.com|sbc2.contoso.com,5061,2102724669,6977155869,yes,yes
 \\\
 
 ### Custom Number Patterns
