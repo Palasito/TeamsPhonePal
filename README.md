@@ -90,8 +90,8 @@ Spain,sbc3.example.com,5063,915551234,612345678,yes,no
 # Deploy Teams Phone configuration for Greece
 TelDep -Country "Greece" \
        -SBCFQDN "sbc.contoso.com" \
-       -Land "2102714669" \
-       -Mob "6977155769" \
+       -Land "2102724669" \
+       -Mob "6977155869" \
        -International \
        -Seggregation
 \\\
@@ -395,7 +395,7 @@ TeamsPhonePal/
 ## Support and Contribution
 
 **Author**: cpalavouzis  
-**Company**: OfficeLine SA  
+**Company**: SPWorxx SA  
 **Version**: 1.0  
 **Generated**: May 16, 2022  
 
